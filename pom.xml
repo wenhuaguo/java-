@@ -8,12 +8,29 @@
   <name>ajax Maven Webapp</name>
   <url>http://maven.apache.org</url>
   <dependencies>
+
+  <artifactId>mt-app</artifactId>
+  <packaging>war</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>mt-app Maven Webapp</name>
+  <url>http://maven.apache.org</url>
+  <dependencies>
+    <!--项目所有的第三方jar全部在这里配置-->
+
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>5.1.40</version>
+    </dependency>
+
+
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
       <version>3.1.0</version>
       <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>commons-dbutils</groupId>
       <artifactId>commons-dbutils</artifactId>
@@ -39,9 +56,16 @@
       </dependency>
 
   </dependencies>
+ 
+
+
+    
   <build>
+
+    <finalName>mt-app</finalName>
     <plugins>
-      <!--编译插件-->
+      <!-- 编译插件 -->
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -52,7 +76,10 @@
           <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
-      <!--tomcat插件-->
+
+
+      <!-- Tomcat插件 -->
+
       <plugin>
         <groupId>org.apache.tomcat.maven</groupId>
         <artifactId>tomcat7-maven-plugin</artifactId>
@@ -63,6 +90,5 @@
         </configuration>
       </plugin>
     </plugins>
-
   </build>
 </project>
