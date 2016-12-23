@@ -5,9 +5,11 @@ package com.kaishengit.util;
 
 
 
+import com.kaishengit.entity.Node;
 import com.kaishengit.exception.DataExpaction;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
+import org.apache.commons.dbutils.handlers.ScalarHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,4 +63,22 @@ public class Dbhelp {
         }
     }
 
+    /**
+     * 返回一个id通过insert语句注意和update的区别
+     * @param sql
+     * @param nodeScalarHandler
+     * @return
+     */
+    public static Integer insert(String sql,Object... param) throws DataExpaction{
+       //创建一个queryRunner对象执行增删改查，参数为从数据库池获取一个连接
+        QueryRunner queryRunner = new QueryRunner(DataConnetion.getDataSource());
+        logger.debug("执行{}异常",sql);
+        try {
+            //long型和int类型的转换
+            return queryRunner.insert(sql,new ScalarHandler<Long>(),param).intValue();
+        } catch (SQLException e) {
+            logger.error("执行{}异常",sql);
+            throw new DataExpaction("执行"+sql+"异常",e);
+        }
+    }
 }

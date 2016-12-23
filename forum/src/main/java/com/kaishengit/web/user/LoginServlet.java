@@ -23,7 +23,8 @@ import java.util.Map;
 public class LoginServlet extends SendHttpServlet{
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        //判断当前是否有用户如果有进行删除
+        req.getSession().removeAttribute("curr_user");
         forward("user/login",req,resp);
     }
 

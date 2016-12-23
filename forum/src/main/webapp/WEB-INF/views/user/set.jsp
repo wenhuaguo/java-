@@ -14,6 +14,7 @@
     <link href="http://cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="http://cdn.bootcss.com/bootstrap/2.3.1/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/js/uploader/webuploader.css">
 </head>
 <body>
 <%@ include file="../include/navbar.jsp"%>
@@ -53,7 +54,7 @@
 
         <form action="" class="form-horizontal" id="resetpassword">
             <div class="control-group">
-                <label class="control-label">密码</label>
+                <label class="control-label">原始密码</label>
                 <div class="controls">
                     <input type="password" name="oldpassword">
                 </div>
@@ -88,7 +89,7 @@
             <div class="control-group">
                 <label class="control-label">当前头像</label>
                 <div class="controls">
-                    <img src="http://ohwsqq8z2.bkt.clouddn.com/${sessionScope.curr_user.avatar}?imageView2/1/w/20/h/20" class="img-circle" alt="">
+                    <img id="avatar" src="http://ohwsqq8z2.bkt.clouddn.com/${sessionScope.curr_user.avatar}?imageView2/1/w/20/h/20" class="img-circle" alt="">
                 </div>
             </div>
             <hr>
@@ -98,7 +99,7 @@
                 <li>如果你是男的，请不要用女人的照片作为头像，这样可能会对其他会员产生误导</li>
             </ul>
             <div class="form-actions">
-                <button class="btn btn-primary">上传新头像</button>
+                <div id="picker">上传新头像</div>
             </div>
 
 
@@ -110,7 +111,54 @@
 </div>
 <!--container end-->
 <script src="/static/js/jquery-1.11.3.min.js"></script>
+<script src="/static/js/uploader/webuploader.min.js"></script>
 <script src="/static/js/jquery.validate.min.js"></script>
 <script src="/static/js/user/set.js"></script>
+<script src="/static/js/layer/layer.js"></script>
+<script>
+    $(function () {
+        //文件上传
+        //1.初始化webuploader将对象作为参数
+        var uploader = WebUploader.create({
+            //1.swf文件的路径
+            swf:'/static/js/uploader/Uploader.swf',
+            //2.文件接收服务器为七牛服务器地址
+            server:"http://up-z1.qiniu.com/",
+            //3.选择文件的按钮（可选）
+            pick:'#picker',
+            //4.是否为自动上传（默认为否）
+            auto:true,
+            formData:{
+                'token':'${token}'
+            },
+            fileVal:'file',
+            //5.对客户端上传的文件进行限制
+            accept:{
+                //title文字描述
+                title: 'Images',
+                //extensions:允许的文件后缀不带点多个用,逗号分隔
+                extensions: 'gif,jpg,jpeg,bmp,png',
+                //允许的mimetype类型全部用下面表示
+                mimeTypes: 'image/*'
+            }
+        });
+        //需要几个事件
+        uploader.on("uploadSuccess",function (file,data) {
+            var key = data.key;
+            $.post("/set?action=avatar",{'key':key}).done(function (data) {
+                if(data.state == 'success'){
+                    var url = "http://ohwsqq8z2.bkt.clouddn.com/" + key;
+                    $("#avatar").attr("src",url+"?imageView2/1/w/40/h/40");
+                    $("#navabar_avatar").attr("src",url+"?imageView2/1/w/20/h/20");
+                }
+            }).error(function () {
+                alert("头像设置失败");
+            })
+        });
+        uploader.on("uploadError",function (file) {
+            alert("服务器异常请稍后再试");
+        })
+    });
+</script>
 </body>
 </html>

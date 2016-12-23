@@ -23,11 +23,11 @@
                 <c:when test="${not empty sessionScope.curr_user}">
                     <li>
                         <a href="/set">
-                            <img src="http://ohwsqq8z2.bkt.clouddn.com/${sessionScope.curr_user.avatar}?imageView2/1/w/20/h/20" class="img-circle" alt="">
+                            <img id="navabar_avatar" src="http://ohwsqq8z2.bkt.clouddn.com/${sessionScope.curr_user.avatar}?imageView2/1/w/20/h/20" class="img-circle" alt="">
                         </a>
                     </li>
                     <li>
-                        <a href=""><i class="fa fa-plus">发帖</i></a>
+                        <a href="/newPost"><i class="fa fa-plus">发帖</i></a>
                     </li>
                     <li>
                         <a href="#"><i class="fa fa-bell"></i></a>

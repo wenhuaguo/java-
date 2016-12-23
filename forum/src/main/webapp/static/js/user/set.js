@@ -1,4 +1,5 @@
 $(function () {
+    //邮箱修改
     $("#changeEmail").click(function () {
         $("#emailForm").submit();
     });
@@ -45,6 +46,7 @@ $(function () {
 
         }
     });
+    //密码修改
     $("#resetBtn").click(function () {
         $("#resetpassword").submit();
     });
@@ -81,10 +83,37 @@ $(function () {
                 equalTo:"两次密码不一致"
             }
         },
-        submitHandler:function () {
+        submitHandler:function (form) {
             $.ajax({
-                url:"/set?action=password"
+                //给URL添加一个参数在Servlet程序中以进行区分
+                url:"/set?action=password",
+                type:"post",
+                data:$(form).serialize(),
+                beforeSend:function () {
+                  $("#resetBtn").text("保存中...").attr("disabled","disabled");
+                },
+                success:function (data) {
+                    if(data.state == 'success'){
+                        layer.alert('密码修改成功，请重新登录', {
+                            skin: 'layui-layer-lan', //样式类名
+                            closeBtn: 0
+                        }, function(){
+                            window.location.href = "/login";
+                        });
+                        //alert("密码修改成功，请重新登录");
+                       //
+                    }else {
+                        alert(data.message);
+                    }
+                },
+                error:function () {
+                    alert("服务器异常");
+                },
+                complete:function () {
+                    $("#resetBtn").text("保存").removeAttr("disabled");
+                }
             });
         }
     });
+
 });

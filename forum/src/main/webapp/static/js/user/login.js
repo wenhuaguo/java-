@@ -1,4 +1,16 @@
 $(function () {
+    //通过该函数获取URL中键对应的值
+    function getParameterByName(name, url) {
+        if (!url) {
+            url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
     $("#loginBtn").click(function () {
         $("#loginForm").submit();
     });
@@ -35,8 +47,30 @@ $(function () {
                 },
                 success:function (data) {
                     if(data.state == "success"){
-                        alert("登录成功");
-                        window.location.href = "/home"
+                        layer.alert('登录成功',{
+                            skin: 'layui-layer-lan',
+                            closeBtn: 0
+                        },function(){
+                            //通过geParameterByName(name,url)获取键对应的值
+
+                            var url = getParameterByName("redirect");
+                            if(url){
+                                var hash =location.hash;//设置或返回从（#）开始的URL(锚)
+                                console.log(hash);
+                                if(hash != null){
+                                    window.location.href = url+hash;
+                                }else {
+                                    window.location.href = url;
+                                }
+                            }else {
+
+                                window.location.href = "/home"
+                            }
+                        });
+                        //alert("登录成功");
+                        //输入键通过该函数获取地址栏中对应的值
+
+
                     }else {
                         alert(data.message);
                     }

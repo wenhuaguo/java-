@@ -26,10 +26,15 @@ public class EmailServlet extends SendHttpServlet {
 
         HttpSession session = req.getSession();
         User currUser = (User)session.getAttribute("curr_user");//从session空间中获取该用户
+        //1.首先判断type是否为空和值是否是1如果是1表示是从setServlet程序中过来的否则是重注册页面过来
         if(currUser != null && "1".equals(type)) {
-            if (email.equals(currUser.getEmail())) {
-                readText("true", resp);
-                return;//return;不带返回值表示终止此方法之后的程序不再运行
+            //2.然后判断根据session取出来的对象是否为空不为空继续下去为空则不管
+            if(currUser != null) {
+                //3.判断输入的邮箱是否和之前邮箱相同
+                if (email.equals(currUser.getEmail())) {
+                    readText("true", resp);
+                    return;//return;不带返回值表示终止此方法之后的程序不再运行
+                }
             }
         }
         System.out.println("email" + email);

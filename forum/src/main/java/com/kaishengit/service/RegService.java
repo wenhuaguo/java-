@@ -255,8 +255,8 @@ public class RegService {
      * @param email
      */
     public void changeEmail(String email, User seesionUser) {
-        seesionUser.setEmail(email);
-        user.update(seesionUser);
+            seesionUser.setEmail(email);
+            user.update(seesionUser);
     }
 
     /**
@@ -265,16 +265,25 @@ public class RegService {
      * @param oldpassword
      * @param newpassword
      */
-    public void resetPassword(User user, String oldpassword, String newpassword) {
-        if(user == null){
-            throw new ServiceException("还没有登录请登录后修改");
+    public void resetPassword(User curruser, String oldpassword, String newpassword) {
+      String salt = ReadConfig.get("user.password.salt");
+            //判断输入的原始密码和sessionID中存储的用户密码是否相等
+            if(curruser.getPassword().equals(DigestUtils.md5Hex(salt+oldpassword))){
+                curruser.setPassword(DigestUtils.md5Hex(salt + newpassword));
+                user.update(curruser);
+                System.out.println("密码修改成功");
         }else {
-            if(user.getPassword().equals(DigestUtils.md5Hex(ReadConfig.get("user.password.salt")+oldpassword))){
-                user.setPassword(DigestUtils.md5Hex(ReadConfig.get("user.password.salt") + newpassword));
-
-            }else {
                 throw new ServiceException("原始密码错误");
             }
-        }
+    }
+
+    /**
+     * 修改用户头像将名字进行存储
+     * @param user
+     * @param avatar
+     */
+    public void changeAvatar(User userAvatar, String avatar) {
+                userAvatar.setAvatar(avatar);
+                user.update(userAvatar);
     }
 }

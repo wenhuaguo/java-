@@ -4,9 +4,9 @@ package com.kaishengit.dto;
  * Created by Acer on 2016/12/19.
  */
 public class JsonResult {
-    //state的状态就两个所有写成常量
-    private static final String SUCCESS="success";
-    private static final String ERROR="error";
+    //state的状态就两个所有写成常量设置为共有属性变量
+    public static final String SUCCESS="success";
+    public static final String ERROR="error";
     private String state;
     private String message;
     private Object data;
